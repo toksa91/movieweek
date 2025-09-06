@@ -14,29 +14,12 @@ st.title("🎬 MovieWeek")
 st.markdown("요일별 영화 관람객 패턴을 분석하고 시각화하는 웹 앱입니다.")
 
 # File uploader widget
-uploaded_file = st.file_uploader(
-    "CSV 또는 Excel 파일을 업로드하세요.",
-    type=["csv", "xlsx"],
-    help="필요한 컬럼: 날짜, 영화명, 관객수, 매출액, 장르(선택)"
-)
-
+uploaded_file = True
 if uploaded_file:
     try:
-        # 파일 형식에 따라 데이터프레임으로 불러오기
-        if uploaded_file.name.endswith('.csv'):
-            # CSV 파일의 헤더가 불규칙하므로, 직접 컬럼명을 지정하고 불필요한 상단 행을 건너뜁니다.
-            file_contents = uploaded_file.getvalue().decode('cp949', errors='replace')
-            file_stream = io.StringIO(file_contents)
-            
-            # 헤더를 직접 지정하여 불필요한 행 건너뛰기
-            columns = ['순위', '영화명', '개봉일', '매출액', '매출액_점유율', '매출액증감', '매출액증감율', '누적매출액',
-                       '관객수', '관객수증감', '관객수증감율', '누적관객수', '스크린수', '상영횟수', '대표국적',
-                       '국적', '제작사', '배급사', '등급', '장르', '감독', '배우']
-            df = pd.read_csv(file_stream, skiprows=8, names=columns)
-        else: # .xlsx
-            # Excel 파일의 경우, 첫 7행을 건너뛰고 헤더를 읽어옵니다.
-            df = pd.read_excel(uploaded_file, engine='openpyxl', skiprows=7)
-
+        url = 'https://github.com/toksa91/movieweek/blob/main/data.csv'+'?raw'
+        df = pd.read_csv(url)
+        st.dataframe(df)
         st.success("파일 업로드 성공!")
         st.subheader("📊 데이터 분석 및 시각화 결과")
 
